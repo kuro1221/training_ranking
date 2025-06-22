@@ -10,7 +10,7 @@ Things you may want to cover:
 * System dependencies
 
 * Configuration
-  - `/api/v1/login` に `name` と `password` を POST すると JWT が発行されます。発行されたトークンを `Authorization` ヘッダーで `Bearer <token>` として渡します。
+  - `/api/v1/login` に `email` と `password` を POST すると JWT が発行されます。発行されたトークンを `Authorization` ヘッダーで `Bearer <token>` として渡します。
   - API では `JWT.decode` を使ってトークンを検証し、`sub` からユーザーを取得します。
 
 * Database creation

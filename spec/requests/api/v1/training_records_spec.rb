@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe "TrainingRecords API", type: :request do
-  let!(:user) { User.create!(name: "tester", password: "secret", password_confirmation: "secret") }
+  let!(:user) { User.create!(name: "tester", email: "tester@example.com", password: "secret", password_confirmation: "secret") }
   let!(:menu) { TrainingMenu.create!(name: "エンドレス腕立て", rule: "無制限にリタイアするまで") }
   let(:token) { JWT.encode({ sub: user.id }, Rails.application.secret_key_base, 'HS256') }
   let(:headers) { { 'Authorization' => "Bearer #{token}" } }
