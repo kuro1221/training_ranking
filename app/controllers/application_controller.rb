@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  before_action :authenticate_user
+
   private
 
   # Authorization header から JWT を取り出してユーザーを取得する
