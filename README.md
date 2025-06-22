@@ -10,6 +10,8 @@ Things you may want to cover:
 * System dependencies
 
 * Configuration
+  - API では `Authorization` ヘッダーに JWT を渡します。JWT は `HS256` 方式で署名されている想定で、`sub` クレームにユーザー ID を含めます。
+  - コントローラでは `JWT.decode` を使ってトークンを検証し、`sub` からユーザーを取得します。
 
 * Database creation
 
