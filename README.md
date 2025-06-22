@@ -8,6 +8,7 @@ Things you may want to cover:
 * Ruby version
 
 * System dependencies
+  - 初回起動時は `bundle install` を実行して必要な gem をインストールします。
 
 * Configuration
   - `/api/v1/login` に `email` と `password` を POST すると JWT が発行されます。発行されたトークンを `Authorization` ヘッダーで `Bearer <token>` として渡します。
