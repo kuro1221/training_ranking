@@ -10,10 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_22_013920) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_22_035904) do
+  create_table "training_menus", force: :cascade do |t|
+    t.string "name"
+    t.text "rule"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "training_records", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "training_menu_id", null: false
+    t.integer "count"
+    t.datetime "recorded_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["training_menu_id"], name: "index_training_records_on_training_menu_id"
+    t.index ["user_id"], name: "index_training_records_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "training_records", "training_menus"
+  add_foreign_key "training_records", "users"
 end

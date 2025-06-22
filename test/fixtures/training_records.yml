@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  training_menu: one
+  count: 1
+  recorded_at: 2025-06-22 12:59:04
+
+two:
+  user: two
+  training_menu: two
+  count: 1
+  recorded_at: 2025-06-22 12:59:04
