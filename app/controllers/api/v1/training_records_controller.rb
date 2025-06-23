@@ -2,6 +2,7 @@ module Api
   module V1
     class TrainingRecordsController < ApplicationController
       before_action :set_training_menu
+      before_action :authenticate_user
       before_action :set_user
 
       def index
@@ -25,7 +26,7 @@ module Api
       end
 
       def set_user
-        @user = User.first
+        @user = @current_user
       end
 
       def record_params

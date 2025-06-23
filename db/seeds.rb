@@ -1,5 +1,5 @@
 # ユーザー
-user = User.create!(name: "テストユーザー")
+user = User.create!(name: "テストユーザー", email: "test@example.com", password: "password", password_confirmation: "password")
 
 # トレーニングメニュー
 menu = TrainingMenu.create!(name: "エンドレス腕立て伏せ", rule: "時間内にできるだけ多く行う")
