@@ -14,7 +14,9 @@ RSpec.describe 'Users API', type: :request do
         }
       end.to change(User, :count).by(1)
       expect(response).to have_http_status(:created)
-      expect(User.last.role).to eq(1)
+      expect(User.last.role).to eq('general')
+      body = JSON.parse(response.body)
+      expect(body['role']).to eq('general')
     end
 
     it 'returns errors with invalid params' do

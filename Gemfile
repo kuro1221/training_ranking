@@ -44,5 +44,8 @@ group :development, :test do
 
   group :development, :test do
     gem "rspec-rails"
+    gem "rswag-ui"
+    gem "rswag-api"
+    gem "rswag-specs"
   end
 end
