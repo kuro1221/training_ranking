@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_22_035904) do
+ActiveRecord::Schema[7.2].define(version: 2025_06_22_080300) do
   create_table "training_menus", force: :cascade do |t|
     t.string "name"
     t.text "rule"
@@ -33,7 +33,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_22_035904) do
     t.string "name"
     t.string "email"
     t.string "password_digest"
-    t.boolean "admin", default: false, null: false
+    t.integer "role", default: 1, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
