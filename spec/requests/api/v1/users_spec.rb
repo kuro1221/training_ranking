@@ -14,6 +14,7 @@ RSpec.describe 'Users API', type: :request do
         }
       end.to change(User, :count).by(1)
       expect(response).to have_http_status(:created)
+      expect(User.last.admin).to be_falsey
     end
 
     it 'returns errors with invalid params' do
