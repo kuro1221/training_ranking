@@ -1,0 +1,30 @@
+name: Update Swagger Docs
+
+on:
+  push:
+    branches:
+      - main   # ドキュメント更新を実行するブランチ
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Generate Swagger docs
+        run: bundle exec rake rswag:specs:swaggerize
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          publish_dir: ./swagger   # 生成したファイルのディレクトリ
+          publish_branch: gh-pages # GitHub Pages 用のブランチ
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
