@@ -16,6 +16,11 @@ RSpec.describe "TrainingRecords API", type: :request do
       expect(response).to have_http_status(:ok)
       expect(JSON.parse(response.body).length).to eq(1)
     end
+
+    it "returns unauthorized without token" do
+      get "/api/v1/training_menus/#{menu.id}/training_records"
+      expect(response).to have_http_status(:unauthorized)
+    end
   end
 
   describe "POST /api/v1/training_menus/:id/training_records" do
@@ -39,6 +44,13 @@ RSpec.describe "TrainingRecords API", type: :request do
       }, headers: headers
 
       expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "requires authentication" do
+      post "/api/v1/training_menus/#{menu.id}/training_records", params: {
+        training_record: { count: 10, recorded_at: Time.current }
+      }
+      expect(response).to have_http_status(:unauthorized)
     end
   end
 end
