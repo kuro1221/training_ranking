@@ -25,3 +25,9 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+## API ドキュメント
+
+このリポジトリでは `rswag` を利用して Swagger 形式の API ドキュメントを生成しています。
+GitHub Actions の `Update Swagger Docs` ワークフローにより `main` ブランチへ push するとドキュメントが生成され、`gh-pages` ブランチへデプロイされます。
+GitHub Pages の設定を有効にするとブラウザから `/api-docs` または GitHub Pages 上で確認できます。
