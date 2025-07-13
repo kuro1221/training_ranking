@@ -1,25 +1,32 @@
-require 'rails_helper'
+require 'swagger_helper'
 
-RSpec.describe 'Users API', type: :request do
-  describe 'POST /api/v1/users' do
-    it 'creates a new user with valid params' do
-      expect do
-        post '/api/v1/users', params: {
-          user: {
-            name: 'tester',
-            email: 'tester@example.com',
-            password: 'secret',
-            password_confirmation: 'secret'
-          }
-        }
-      end.to change(User, :count).by(1)
-      expect(response).to have_http_status(:created)
-      expect(User.last.role).to eq(1)
-    end
+RSpec.describe 'Users API', swagger_doc: 'v1/swagger.yaml', type: :request do
+  path '/api/v1/users' do
+    post 'ユーザー登録' do
+      tags 'Users'
+      consumes 'application/json'
+      parameter name: :user, in: :body, schema: {
+        type: :object,
+        properties: {
+          name: { type: :string },
+          email: { type: :string },
+          password: { type: :string },
+          password_confirmation: { type: :string }
+        },
+        required: %w[name email password password_confirmation]
+      }
 
-    it 'returns errors with invalid params' do
-      post '/api/v1/users', params: { user: { name: '' } }
-      expect(response).to have_http_status(:unprocessable_entity)
+      response(201, '作成成功') do
+        let(:user) { { user: { name: 'tester', email: 'tester@example.com', password: 'secret', password_confirmation: 'secret' } } }
+        run_test! do
+          expect(User.last.role).to eq(1)
+        end
+      end
+
+      response(422, '不正なパラメータ') do
+        let(:user) { { user: { name: '' } } }
+        run_test!
+      end
     end
   end
 end

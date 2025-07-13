@@ -1,56 +1,71 @@
-require 'rails_helper'
+require 'swagger_helper'
 
-RSpec.describe "TrainingRecords API", type: :request do
+RSpec.describe "TrainingRecords API", swagger_doc: 'v1/swagger.yaml', type: :request do
   let!(:user) { User.create!(name: "tester", email: "tester@example.com", password: "secret", password_confirmation: "secret") }
   let!(:menu) { TrainingMenu.create!(name: "エンドレス腕立て", rule: "無制限にリタイアするまで") }
   let(:token) { JWT.encode({ sub: user.id }, Rails.application.secret_key_base, 'HS256') }
   let(:headers) { { 'Authorization' => "Bearer #{token}" } }
 
-  describe "GET /api/v1/training_menus/:id/training_records" do
-    before do
-      TrainingRecord.create!(user: user, training_menu: menu, count: 20, recorded_at: Time.current)
+  path "/api/v1/training_menus/{training_menu_id}/training_records" do
+    parameter name: :training_menu_id, in: :path, type: :string, description: 'メニューID'
+    parameter name: :Authorization, in: :header, type: :string, required: false
+
+    get "一覧取得" do
+      tags "TrainingRecords"
+      produces "application/json"
+
+      response(200, "成功") do
+        let(:training_menu_id) { menu.id }
+        let(:Authorization) { "Bearer #{token}" }
+        before do
+          TrainingRecord.create!(user: user, training_menu: menu, count: 20, recorded_at: Time.current)
+        end
+        run_test! do |response|
+          expect(JSON.parse(response.body).length).to eq(1)
+        end
+      end
+
+      response(401, "未認証") do
+        let(:training_menu_id) { menu.id }
+        run_test!
+      end
     end
 
-    it "returns records" do
-      get "/api/v1/training_menus/#{menu.id}/training_records", headers: headers
-      expect(response).to have_http_status(:ok)
-      expect(JSON.parse(response.body).length).to eq(1)
-    end
+    post "登録" do
+      tags "TrainingRecords"
+      consumes "application/json"
+      produces "application/json"
 
-    it "returns unauthorized without token" do
-      get "/api/v1/training_menus/#{menu.id}/training_records"
-      expect(response).to have_http_status(:unauthorized)
-    end
-  end
-
-  describe "POST /api/v1/training_menus/:id/training_records" do
-    it "creates a new record" do
-      post "/api/v1/training_menus/#{menu.id}/training_records", params: {
-        training_record: {
-          count: 30,
-          recorded_at: Time.current
-        }
-      }, headers: headers
-
-      expect(response).to have_http_status(:created)
-      expect(TrainingRecord.count).to eq(1)
-    end
-
-    it "fails with invalid params" do
-      post "/api/v1/training_menus/#{menu.id}/training_records", params: {
-        training_record: {
-          recorded_at: nil
-        }
-      }, headers: headers
-
-      expect(response).to have_http_status(:unprocessable_entity)
-    end
-
-    it "requires authentication" do
-      post "/api/v1/training_menus/#{menu.id}/training_records", params: {
-        training_record: { count: 10, recorded_at: Time.current }
+      parameter name: :training_record, in: :body, schema: {
+        type: :object,
+        properties: {
+          count: { type: :integer },
+          recorded_at: { type: :string, format: :date_time }
+        },
+        required: %w[count recorded_at]
       }
-      expect(response).to have_http_status(:unauthorized)
+
+      response(201, "作成成功") do
+        let(:training_menu_id) { menu.id }
+        let(:Authorization) { "Bearer #{token}" }
+        let(:training_record) { { count: 30, recorded_at: Time.current } }
+        run_test! do
+          expect(TrainingRecord.count).to eq(1)
+        end
+      end
+
+      response(422, "不正なパラメータ") do
+        let(:training_menu_id) { menu.id }
+        let(:Authorization) { "Bearer #{token}" }
+        let(:training_record) { { recorded_at: nil } }
+        run_test!
+      end
+
+      response(401, "未認証") do
+        let(:training_menu_id) { menu.id }
+        let(:training_record) { { count: 10, recorded_at: Time.current } }
+        run_test!
+      end
     end
   end
 end
