@@ -1,8 +1,111 @@
+---
 openapi: 3.0.1
 info:
   title: API V1
   version: v1
-paths: {}
+paths:
+  "/api/v1/login":
+    post:
+      summary: ログイン
+      tags:
+      - Sessions
+      parameters: []
+      responses:
+        '201':
+          description: 成功
+        '401':
+          description: 認証失敗
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+              - email
+              - password
+  "/api/v1/training_menus/{training_menu_id}/training_records":
+    parameters:
+    - name: training_menu_id
+      in: path
+      description: メニューID
+      required: true
+      schema:
+        type: string
+    - name: Authorization
+      in: header
+      required: false
+      schema:
+        type: string
+    get:
+      summary: 一覧取得
+      tags:
+      - TrainingRecords
+      responses:
+        '200':
+          description: 成功
+        '401':
+          description: 未認証
+    post:
+      summary: 登録
+      tags:
+      - TrainingRecords
+      parameters: []
+      responses:
+        '201':
+          description: 作成成功
+        '422':
+          description: 不正なパラメータ
+        '401':
+          description: 未認証
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                count:
+                  type: integer
+                recorded_at:
+                  type: string
+                  format: date_time
+              required:
+              - count
+              - recorded_at
+  "/api/v1/users":
+    post:
+      summary: ユーザー登録
+      tags:
+      - Users
+      parameters: []
+      responses:
+        '201':
+          description: 作成成功
+        '422':
+          description: 不正なパラメータ
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+              required:
+              - name
+              - email
+              - password
+              - password_confirmation
 servers:
 - url: https://{defaultHost}
   variables:
