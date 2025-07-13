@@ -5,7 +5,7 @@
 
 # ルール
 
-- UnitテストとIntegrationテストを書いてください
+- UnitテストとIntegrationテストを書いてください。必要に応じてrswagの書き方にしてください。
 - PR作成前に"rubocop -a"を実行して、コードを整形してください
 
 # その他
