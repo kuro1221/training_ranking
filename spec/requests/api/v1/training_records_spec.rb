@@ -23,6 +23,13 @@ RSpec.describe "TrainingRecords API", swagger_doc: 'v1/swagger.yaml', type: :req
         run_test! do |response|
           expect(JSON.parse(response.body).length).to eq(1)
         end
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
       end
 
       response(401, "未認証") do
@@ -49,8 +56,15 @@ RSpec.describe "TrainingRecords API", swagger_doc: 'v1/swagger.yaml', type: :req
         let(:training_menu_id) { menu.id }
         let(:Authorization) { "Bearer #{token}" }
         let(:training_record) { { count: 30, recorded_at: Time.current } }
-        run_test! do
+        run_test! do |response|
           expect(TrainingRecord.count).to eq(1)
+        end
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
         end
       end
 
@@ -59,12 +73,26 @@ RSpec.describe "TrainingRecords API", swagger_doc: 'v1/swagger.yaml', type: :req
         let(:Authorization) { "Bearer #{token}" }
         let(:training_record) { { recorded_at: nil } }
         run_test!
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
       end
 
       response(401, "未認証") do
         let(:training_menu_id) { menu.id }
         let(:training_record) { { count: 10, recorded_at: Time.current } }
         run_test!
+        after do |example|
+          example.metadata[:response][:content] = {
+            "application/json" => {
+              example: response.body.presence
+            }
+          }
+        end
       end
     end
   end
