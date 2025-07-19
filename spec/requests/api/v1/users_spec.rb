@@ -18,14 +18,28 @@ RSpec.describe 'Users API', swagger_doc: 'v1/swagger.yaml', type: :request do
 
       response(201, '作成成功') do
         let(:user) { { user: { name: 'tester', email: 'tester@example.com', password: 'secret', password_confirmation: 'secret' } } }
-        run_test! do
+        run_test! do |response|
           expect(User.last.role).to eq(1)
+        end
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
         end
       end
 
       response(422, '不正なパラメータ') do
         let(:user) { { user: { name: '' } } }
         run_test!
+        after do |example|
+          example.metadata[:response][:content] = {
+            'application/json' => {
+              example: JSON.parse(response.body, symbolize_names: true)
+            }
+          }
+        end
       end
     end
   end
