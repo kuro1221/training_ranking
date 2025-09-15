@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       resources :users, only: [ :create ]
       resources :training_menus, only: [] do
         resources :training_records, only: [ :index, :create ]
+        get :rankings, to: "rankings#index"
       end
     end
   end
